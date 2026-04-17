@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programming in C - Exam Solutions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --bg: #f6efe2;
+      --bg-soft: #fffaf1;
+      --card: #fffdf7;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --accent: #0f766e;
+      --accent-2: #c2410c;
+      --line: #e5dccf;
+      --shadow: 0 10px 30px rgba(31, 41, 55, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 8%, #f8e8cc 0%, transparent 30%),
+        radial-gradient(circle at 90% 2%, #e4f2ee 0%, transparent 28%),
+        linear-gradient(180deg, var(--bg) 0%, #f2e8d7 100%);
+      font-family: "Manrope", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+    }
+
+    .side {
+      position: sticky;
+      top: 20px;
+      height: fit-content;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .brand {
+      margin: 0;
+      font-family: "DM Serif Display", Georgia, serif;
+      font-size: 1.35rem;
+      line-height: 1.25;
+      letter-spacing: 0.2px;
+    }
+
+    .tag {
+      margin: 10px 0 16px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      width: fit-content;
+      color: #064e3b;
+      background: #d1fae5;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    .tools {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+
+    .search {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+
+    .toc {
+      max-height: 52vh;
+      overflow: auto;
+      border-top: 1px dashed var(--line);
+      padding-top: 12px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .toc a {
+      text-decoration: none;
+      color: #374151;
+      font-size: 0.9rem;
+      line-height: 1.3;
+      border-radius: 8px;
+      padding: 6px 8px;
+    }
+
+    .toc a:hover {
+      background: #f4efe3;
+      color: #111827;
+    }
+
+    .toc .lvl3 {
+      margin-left: 10px;
+      color: #6b7280;
+      font-size: 0.84rem;
+    }
+
+    .main {
+      min-width: 0;
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, #fffdf8 0%, #f6fbf9 100%);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: "DM Serif Display", Georgia, serif;
+      font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 70ch;
+    }
+
+    .paper {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      overflow: hidden;
+    }
+
+    .paper h1,
+    .paper h2,
+    .paper h3,
+    .paper h4 {
+      scroll-margin-top: 24px;
+    }
+
+    .paper h1,
+    .paper h2 {
+      font-family: "DM Serif Display", Georgia, serif;
+      letter-spacing: 0.2px;
+      color: #111827;
+      margin-top: 26px;
+      margin-bottom: 10px;
+    }
+
+    .paper h1 {
+      font-size: 1.9rem;
+      border-bottom: 2px solid #e8ddc8;
+      padding-bottom: 8px;
+    }
+
+    .paper h2 {
+      font-size: 1.5rem;
+      border-left: 4px solid var(--accent);
+      padding-left: 10px;
+    }
+
+    .paper h3 {
+      margin-top: 18px;
+      margin-bottom: 8px;
+      color: #0f172a;
+      font-size: 1.15rem;
+    }
+
+    .paper p,
+    .paper li {
+      color: #243142;
+      line-height: 1.72;
+      font-size: 0.98rem;
+    }
+
+    .paper table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .paper thead {
+      background: #e8f3f0;
+    }
+
+    .paper th,
+    .paper td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .paper code {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.9em;
+      background: #f5efe2;
+      border: 1px solid #e7dbc6;
+      padding: 0.1em 0.4em;
+      border-radius: 6px;
+    }
+
+    .paper pre {
+      background: #12222a;
+      color: #e5f3f4;
+      border-radius: 14px;
+      padding: 14px;
+      overflow: auto;
+      border: 1px solid #304852;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .paper pre code {
+      background: transparent;
+      border: none;
+      padding: 0;
+      color: inherit;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .paper blockquote {
+      margin: 12px 0;
+      padding: 10px 14px;
+      border-left: 4px solid var(--accent-2);
+      background: #fff4eb;
+      border-radius: 10px;
+      color: #7c2d12;
+    }
+
+    .paper hr {
+      border: none;
+      border-top: 1px dashed var(--line);
+      margin: 24px 0;
+    }
+
+    .flash {
+      animation: reveal 0.55s ease both;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .foot {
+      margin-top: 14px;
+      color: #6b7280;
+      text-align: center;
+      font-size: 0.86rem;
+    }
+
+    mark {
+      background: #fff2b7;
+      border-radius: 4px;
+      padding: 0 2px;
+    }
+
+    @media (max-width: 980px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        position: static;
+      }
+
+      .toc {
+        max-height: 230px;
+      }
+
+      .paper,
+      .hero {
+        padding: 20px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .shell {
+        display: block;
+        max-width: 100%;
+        padding: 0;
+      }
+
+      .side,
+      .hero {
+        display: none;
+      }
+
+      .paper {
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="side">
+      <h2 class="brand">Programming in C</h2>
+      <div class="tag">Exam + Detailed Answers</div>
+
+      <div class="tools">
+        <button id="expandBtn" type="button">Expand Code Blocks</button>
+        <button id="printBtn" type="button">Print / Save PDF</button>
+      </div>
+
+      <input id="searchBox" class="search" type="search" placeholder="Search keywords..." />
+      <nav id="toc" class="toc" aria-label="Table of Contents"></nav>
+    </aside>
+
+    <main class="main">
+      <section class="hero flash">
+        <h1>22CS201 - Programming in C: Question Paper and Full Solutions</h1>
+        <p>
+          This page auto-loads content from programming_in_c_exam.md and renders it in a clean format for revision, teaching, and printing.
+        </p>
+      </section>
+
+      <article id="content" class="paper flash">
+        Loading content...
+      </article>
+      <p class="foot">Prepared for quick visual study and exam practice.</p>
+    </main>
+  </div>
+
+  <script>
+    const contentEl = document.getElementById("content");
+    const tocEl = document.getElementById("toc");
+    const searchBox = document.getElementById("searchBox");
+    const expandBtn = document.getElementById("expandBtn");
+
+    function basicEscape(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function renderFallbackMarkdown(md) {
+      // Minimal fallback renderer when CDN is unavailable.
+      const lines = md.split("\n");
+      let html = "";
+      let inCode = false;
+      let inList = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+
+        if (line.startsWith("```")) {
+          if (!inCode) {
+            inCode = true;
+            if (inList) {
+              html += "</ul>";
+              inList = false;
+            }
+            html += "<pre><code>";
+          } else {
+            inCode = false;
+            html += "</code></pre>";
+          }
+          continue;
+        }
+
+        if (inCode) {
+          html += basicEscape(line) + "\n";
+          continue;
+        }
+
+        if (/^###\s+/.test(line)) {
+          if (inList) {
+            html += "</ul>";
+            inList = false;
+          }
+          html += `<h3>${basicEscape(line.replace(/^###\s+/, ""))}</h3>`;
+          continue;
+        }
+
+        if (/^##\s+/.test(line)) {
+          if (inList) {
+            html += "</ul>";
+            inList = false;
+          }
+          html += `<h2>${basicEscape(line.replace(/^##\s+/, ""))}</h2>`;
+          continue;
+        }
+
+        if (/^#\s+/.test(line)) {
+          if (inList) {
+            html += "</ul>";
+            inList = false;
+          }
+          html += `<h1>${basicEscape(line.replace(/^#\s+/, ""))}</h1>`;
+          continue;
+        }
+
+        if (/^\s*[-*]\s+/.test(line) || /^\s*\d+\.\s+/.test(line)) {
+          if (!inList) {
+            html += "<ul>";
+            inList = true;
+          }
+          const item = line.replace(/^\s*[-*]\s+/, "").replace(/^\s*\d+\.\s+/, "");
+          html += `<li>${basicEscape(item)}</li>`;
+          continue;
+        }
+
+        if (line.trim() === "") {
+          if (inList) {
+            html += "</ul>";
+            inList = false;
+          }
+          html += "<br/>";
+          continue;
+        }
+
+        html += `<p>${basicEscape(line)}</p>`;
+      }
+
+      if (inList) {
+        html += "</ul>";
+      }
+      if (inCode) {
+        html += "</code></pre>";
+      }
+
+      return html;
+    }
+
+    function slugify(text) {
+      return text
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-");
+    }
+
+    function assignHeadingIds() {
+      const headings = contentEl.querySelectorAll("h1, h2, h3");
+      const used = new Set();
+
+      headings.forEach((h) => {
+        let id = slugify(h.textContent || "section");
+        if (!id) id = "section";
+        let base = id;
+        let count = 2;
+        while (used.has(id)) {
+          id = `${base}-${count}`;
+          count++;
+        }
+        used.add(id);
+        h.id = id;
+      });
+    }
+
+    function buildToc() {
+      const headings = contentEl.querySelectorAll("h2, h3");
+      tocEl.innerHTML = "";
+
+      if (!headings.length) {
+        tocEl.innerHTML = "<p style='color:#6b7280;margin:0;'>No headings found.</p>";
+        return;
+      }
+
+      headings.forEach((h) => {
+        const a = document.createElement("a");
+        a.href = `#${h.id}`;
+        a.textContent = h.textContent;
+        if (h.tagName.toLowerCase() === "h3") {
+          a.classList.add("lvl3");
+        }
+        tocEl.appendChild(a);
+      });
+    }
+
+    function clearHighlights(root) {
+      root.querySelectorAll("mark").forEach((m) => {
+        const parent = m.parentNode;
+        parent.replaceChild(document.createTextNode(m.textContent), m);
+        parent.normalize();
+      });
+    }
+
+    function highlightText(root, query) {
+      clearHighlights(root);
+      if (!query) return;
+
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      let node;
+      while ((node = walker.nextNode())) {
+        if (node.nodeValue.trim()) nodes.push(node);
+      }
+
+      const regex = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
+
+      nodes.forEach((textNode) => {
+        const text = textNode.nodeValue;
+        if (!regex.test(text)) return;
+        regex.lastIndex = 0;
+
+        const frag = document.createDocumentFragment();
+        let last = 0;
+        let match;
+
+        while ((match = regex.exec(text)) !== null) {
+          const start = match.index;
+          const end = regex.lastIndex;
+          frag.appendChild(document.createTextNode(text.slice(last, start)));
+          const mark = document.createElement("mark");
+          mark.textContent = text.slice(start, end);
+          frag.appendChild(mark);
+          last = end;
+        }
+        frag.appendChild(document.createTextNode(text.slice(last)));
+        textNode.parentNode.replaceChild(frag, textNode);
+      });
+    }
+
+    function expandCodeBlocks() {
+      const blocks = contentEl.querySelectorAll("pre");
+      const expanded = expandBtn.dataset.expanded === "true";
+      blocks.forEach((b) => {
+        b.style.maxHeight = expanded ? "260px" : "none";
+      });
+      expandBtn.dataset.expanded = expanded ? "false" : "true";
+      expandBtn.textContent = expanded ? "Expand Code Blocks" : "Collapse Code Blocks";
+    }
+
+    async function loadMarkdown() {
+      try {
+        const response = await fetch("./programming_in_c_exam.md");
+        if (!response.ok) {
+          throw new Error("Could not load markdown file");
+        }
+
+        const md = await response.text();
+
+        if (window.marked && typeof window.marked.parse === "function") {
+          contentEl.innerHTML = window.marked.parse(md, {
+            gfm: true,
+            breaks: false,
+            mangle: false,
+            headerIds: false
+          });
+        } else {
+          contentEl.innerHTML = renderFallbackMarkdown(md);
+        }
+
+        assignHeadingIds();
+        buildToc();
+
+        contentEl.querySelectorAll("pre").forEach((block) => {
+          block.style.maxHeight = "260px";
+        });
+      } catch (error) {
+        contentEl.innerHTML = `
+          <h2>Unable to load markdown file</h2>
+          <p>Please keep this HTML file in the same folder as <code>programming_in_c_exam.md</code>.</p>
+          <p>Error: ${error.message}</p>
+        `;
+      }
+    }
+
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+    expandBtn.addEventListener("click", expandCodeBlocks);
+
+    searchBox.addEventListener("input", (e) => {
+      const query = e.target.value.trim();
+      highlightText(contentEl, query);
+    });
+
+    loadMarkdown();
+  </script>
+</body>
+</html>
